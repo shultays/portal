@@ -6,13 +6,13 @@
 #include <stdio.h>
 
 
-Wall *walls[6]; //duvarları tutan array
-int wallN; //duvar sayısı (aslında sabit 6, ilerde belki arttırırım diye)
+Wall *walls[6]; //duvarlari tutan array
+int wallN; //duvar sayisi (aslinda sabit 6, ilerde belki arttiririm diye)
  
-float camN[3] = {0, 0, 0}; //cameranın kordinatı
-float camX[3] = {1, 0, 0}; //cameranın x vektörü
-float camY[3] = {0, 1, 0}; // y vektörü
-float camZ[3] = {0, 0, 1}; //kameranın baktığı yön
+float camN[3] = {0, 0, 0}; //cameranin kordinati
+float camX[3] = {1, 0, 0}; //cameranin x vektoru
+float camY[3] = {0, 1, 0}; // y vektoru
+float camZ[3] = {0, 0, 1}; //kameranin baktigi yon
  
 void mouse();
 void timerf();
@@ -66,20 +66,20 @@ void drawScene(void){
   r += 0.05;
 }
 
-float speed = 4; //hareket hızı
+float speed = 4; //hareket hizi
 
 float forward = 0; //hangi yonlere gidildigini tutan degerler
 float sideward = 0;
 float upward = 0;
 
 Portal *portals[3]; //portal nesnelerinin addreslerini tutan array
-					//0 ve 2. elemanlar aynı eleman
+					//0 ve 2. elemanlar ayni eleman
 
 void controlCam(void){
-  //basılan tuşlara göre kamerayı haraket ettiren fonksiyon
-  glfwPollEvents(); //basılmış tuşları refresh et
+  //basilan tuslara gore kamerayi haraket ettiren fonksiyon
+  glfwPollEvents(); //basilmis tuslari refresh et
 
-  if(glfwGetKey('W') == GLFW_PRESS){ //hangi tuşun basıldığına göre hizları belirle
+  if(glfwGetKey('W') == GLFW_PRESS){ //hangi tusun basildigina gore hizlari belirle
     forward = 1.0;
   }else if(glfwGetKey('S') == GLFW_PRESS){
     forward = -1.0;
@@ -95,14 +95,14 @@ void controlCam(void){
     upward = -1.0;
   }else upward = 0;
 
-  if(ciz) click(); //eğer fare tıklanmıs ve portal hareket ettirme modunda ise portalı hareket ettir
+  if(ciz) click(); //eger fare tiklanmis ve portal hareket ettirme modunda ise portali hareket ettir
 }
 
 void render(int t){
-  //tüm nesneleri ve duvarları cizecek olan fonksiyon
+  //tum nesneleri ve duvarlari cizecek olan fonksiyon
   drawScene();
   for(int i=0; i<wallN;i++){
-    if(!walls[i]->disable || t == 1) walls[i]->draw(); //duruma gore portalın uzerinde oldugu duvarlar cizilmeyebilir (daha sonra deginilecek)
+    if(!walls[i]->disable || t == 1) walls[i]->draw(); //duruma gore portalin uzerinde oldugu duvarlar cizilmeyebilir (daha sonra deginilecek)
   }
 }
 
@@ -111,48 +111,48 @@ float d = 0;
 
 static void display(){
   int i;
-  mouse(); //fare de bir değişiklik var mı bak
-  click(); //fare tıklanmış mı kontrol et
-  if( glfwGetTime() > 0.02){ //eger belirli bir sure gecti ise timer fonksiyonunu çalıştır (saniyede 50 kere)
+  mouse(); //fare de bir degisiklik var mi bak
+  click(); //fare tiklanmis mi kontrol et
+  if( glfwGetTime() > 0.02){ //eger belirli bir sure gecti ise timer fonksiyonunu calistir (saniyede 50 kere)
   	glfwSetTime(0.0);
   	
   	timerf();
   }
   
   
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //bütün buffer ları temizle
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //butun buffer lari temizle
   
   glClearDepth(1.0); //depth i temizle
   
   glLoadIdentity();
   gluLookAt( camN[0] - camZ[0],  camN[1] - camZ[1],  camN[2] - camZ[2], 
              camN[0], camN[1], camN[2],
-             camY[0], camY[1], camY[2]); //kameranın bakış açısını ayarla
+             camY[0], camY[1], camY[2]); //kameranin bakis acisini ayarla
    
 
 
   
-  //bu kısım portalları ve sahneyi düzgün bir şekilde çizecek
+  //bu kisim portallari ve sahneyi duzgun bir sekilde cizecek
   
-  if(portals[0]->onThis == portals[1]->onThis){ // eger iki portalda aynı duvar üzerinde ise durum biraz farklı
+  if(portals[0]->onThis == portals[1]->onThis){ // eger iki portalda ayni duvar uzerinde ise durum biraz farkli
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); 
     glDisable(GL_DEPTH_TEST);
-    portals[0]->draw(); //iki portalıda stencil buffer a ciz
+    portals[0]->draw(); //iki portalida stencil buffer a ciz
     portals[1]->draw();
     glEnable(GL_DEPTH_TEST);  
 
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
     glStencilFunc(GL_EQUAL, 0, 1);
 
-    portals[0]->onThis->draw(); //portalların cizilmediği yerlere duvarı ciz
+    portals[0]->onThis->draw(); //portallarin cizilmedigi yerlere duvari ciz
   }
   
 
 
   for(i=0; i<2; i++){
     
-    glEnable(GL_STENCIL_TEST); //bu kısımda portalların gosterdigi bolumler ciziliyor
+    glEnable(GL_STENCIL_TEST); //bu kisimda portallarin gosterdigi bolumler ciziliyor
     //her iki portal icin dongu
     
     glStencilFunc(GL_ALWAYS, 1, 0);
@@ -161,14 +161,14 @@ static void display(){
   
     glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
-    portals[i]->draw(); //portalı stencil buffer a ciz
+    portals[i]->draw(); //portali stencil buffer a ciz
     glEnable(GL_DEPTH_TEST);  
 
     glStencilFunc(GL_EQUAL, 1, 1);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-    //burada yaptığı işlem tüm sahneyi portalları birbirine cakisacak sekilde hareket ettirmek
-    //h y basılırsa vektorlerin cakıstıgı goruluyor
+    //burada yaptigi islem tum sahneyi portallari birbirine cakisacak sekilde hareket ettirmek
+    //h y basilirsa vektorlerin cakistigi goruluyor
     
     glPushMatrix();
       glTranslatef(portals[i]->coor[0], portals[i]->coor[1], portals[i]->coor[2]);
@@ -180,23 +180,23 @@ static void display(){
    
 
       portals[i+1]->onThis->disable = 1;
-      render(1); //sahne hareket ettirilmis durumda iken diger portalın üzerinde oldugu duvar haric tum sahneyi render et
+      render(1); //sahne hareket ettirilmis durumda iken diger portalin uzerinde oldugu duvar haric tum sahneyi render et
       
       
       if(glfwGetKey('H')) portals[i+1]->drawLine();
     
-      //su anki portalı siyah olarak ciz
+      //su anki portali siyah olarak ciz
       glTranslatef(portals[i]->lookZ[0]*4,portals[i]->lookZ[1]*4,portals[i]->lookZ[2]*4);
       portals[i]->drawFrame(1);
 
-      //kameranın bulundugu yere kure ciz
+      //kameranin bulundugu yere kure ciz
       glTranslatef(camN[0], camN[1], camN[2]);
       glColor3f(0.5, 0.5, 0.5);
       gluSphere( quadric, 20, 20, 20);
  
      
     glPopMatrix(); 
-    //buradada eger iki portal aynı yerde degilse portalın uzerinde oldugu duvarı ciziyoruz (bu gercek duvar, portalın icinde olan degil)
+    //buradada eger iki portal ayni yerde degilse portalin uzerinde oldugu duvari ciziyoruz (bu gercek duvar, portalin icinde olan degil)
     glStencilFunc(GL_EQUAL, 0, 1);
     if(portals[i+1]->onThis != portals[i]->onThis) portals[i]->onThis->draw();
 
@@ -205,13 +205,13 @@ static void display(){
 
   glDisable(GL_STENCIL_TEST); //stencil ile isimiz bitti
 
-  portalA.onThis->disable = 1; //her iki portalın üzerinde oldugu duvarları iptal et
+  portalA.onThis->disable = 1; //her iki portalin uzerinde oldugu duvarlari iptal et
   portalB.onThis->disable = 1; //gercek sahneyi ciz
   render(0);
-  portalA.drawFrame(0); //portalların kenarlarını yarı saydam olacak sekilde ciz
+  portalA.drawFrame(0); //portallarin kenarlarini yari saydam olacak sekilde ciz
   portalB.drawFrame(0);
 
-  if(ciz){ //eger fare basılı tutuluyor ise portalları cizgi olarak ciz
+  if(ciz){ //eger fare basili tutuluyor ise portallari cizgi olarak ciz
     glLineWidth(4);
     glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
@@ -231,7 +231,7 @@ static void display(){
   portalA.onThis->disable = 0;
   portalB.onThis->disable = 0;
   if(glfwGetKey('H')) {
-  	 portalA.drawLine(); //H basılı ise portal vektorlerini ciz
+  	 portalA.drawLine(); //H basili ise portal vektorlerini ciz
      portalB.drawLine();
   }
   
@@ -239,7 +239,7 @@ static void display(){
 
 
 void init(){
-  //sadece baslangıcta calısan duvarları vs ayarlayan fonksiyyon
+  //sadece baslangicta calisan duvarlari vs ayarlayan fonksiyyon
   float **p;
   
   p = new float*[4];
@@ -248,7 +248,7 @@ void init(){
   p[2] = new float[3];
   p[3] = new float[3];
 
-  //tüm duvarlar icin kordinatları ver
+  //tum duvarlar icin kordinatlari ver
   p[0][0] = -400;  p[0][1] = +400;   p[0][2] = 400;
   p[1][0] = +400;  p[1][1] = +400;   p[1][2] = 400;
   p[2][0] = +400;  p[2][1] = -400;   p[2][2] = 400;
@@ -286,21 +286,21 @@ void init(){
   p[3][0] = -400;  p[3][1] = -400;   p[3][2] = -400;
   walls[5] = new Wall(4, p, 0, 1, 1);
 
-  wallN = 6; //duvar sayısı 6
+  wallN = 6; //duvar sayisi 6
 
-  portalA.coor[0] = 0; //portalın baslangıc degerleri
+  portalA.coor[0] = 0; //portalin baslangic degerleri
   portalA.coor[1] = 0;
   portalA.coor[2] = 400;
 
-  portalA.lookZ[0] = 0; //portalın batığı yön
+  portalA.lookZ[0] = 0; //portalin batigi yon
   portalA.lookZ[1] = 0;
   portalA.lookZ[2] = -1;
 
-  portalA.lookX[0] = 0.6; //portalın x vektörü
+  portalA.lookX[0] = 0.6; //portalin x vektoru
   portalA.lookX[1] = 0.8;
   portalA.lookX[2] = 0;
 
-  portalA.lookY[0] = 1;  //portalın y vektörü
+  portalA.lookY[0] = 1;  //portalin y vektoru
   portalA.lookY[1] = 0;
   portalA.lookY[2] = 0;
 
@@ -326,16 +326,16 @@ void init(){
   portalB.lookZ[2] = 0;
 
 
-  crossProduct(portalB.lookX, portalB.lookZ, portalB.lookY); //portalların vektörlerini cross product yaparak dik olalarından emin oluyoruz
-  crossProduct(portalA.lookX, portalA.lookZ, portalA.lookY); //cokta gerekli degilmis aslında =)
+  crossProduct(portalB.lookX, portalB.lookZ, portalB.lookY); //portallarin vektorlerini cross product yaparak dik olalarindan emin oluyoruz
+  crossProduct(portalA.lookX, portalA.lookZ, portalA.lookY); //cokta gerekli degilmis aslinda =)
 
-  crossProduct(camX, camZ, camY); //kamerada aynı şekilde
+  crossProduct(camX, camZ, camY); //kamerada ayni sekilde
 
   portalB.color[0] = 0.0;
   portalB.color[1] = 0.0;
   portalB.color[2] = 0.0;
 
-  portalA.setMatr(); //bu fonksiyon portalların iclerini cizmek icin gerekli olan matrix leri sağlıyor
+  portalA.setMatr(); //bu fonksiyon portallarin iclerini cizmek icin gerekli olan matrix leri sagliyor
   portalB.setMatr();
 
   portalA.onThis = walls[0];
@@ -350,11 +350,11 @@ void init(){
   portals[2] = &portalA;
 }
 
-void mouse(){ //faremizin hareketine göre amerayı döndüren fonksiyon
+void mouse(){ //faremizin hareketine gore amerayi donduren fonksiyon
 	int x, y;
 	glfwGetMousePos(&x, &y);
 	if(x != 240 || y != 240){
-      //eger fare haraket etmisse vektörleri cevir
+      //eger fare haraket etmisse vektorleri cevir
       float a = (240 - x)*0.5;
     
       rotateVector(a, camX, camY); 
@@ -369,17 +369,17 @@ void mouse(){ //faremizin hareketine göre amerayı döndüren fonksiyon
 }
 
 void timerf(){
-  //kamera hareket yönüne göre onu hareet ettiren fonksiyon
+  //kamera hareket yonune gore onu hareet ettiren fonksiyon
   int i;
   
   float camOldN[3];
-  camOldN[0] = camN[0]; //eski koordinatları kaydet
+  camOldN[0] = camN[0]; //eski koordinatlari kaydet
   camOldN[1] = camN[1];
   camOldN[2] = camN[2];
 
-  controlCam(); //hangi tuslar basılı kontrol et
+  controlCam(); //hangi tuslar basili kontrol et
 
-  camN[0] += camZ[0]*forward*speed; //tusların basılı olmasına göre atanan forward, sideward and upward değerlerine göre kamerayı hareket ettir
+  camN[0] += camZ[0]*forward*speed; //tuslarin basili olmasina gore atanan forward, sideward and upward degerlerine gore kamerayi hareket ettir
   camN[1] += camZ[1]*forward*speed;
   camN[2] += camZ[2]*forward*speed;
 
@@ -391,12 +391,12 @@ void timerf(){
   camN[1] += camY[1]*upward*speed;
   camN[2] += camY[2]*upward*speed;
 
-  for(i=0; i<2; i++){ // bu kısım portalın icinden geciyormuyuz diye kontrol ediyor
-    if(portals[i]->checkCollision(camOldN, camN)){ //eger bir onceki koordinatımız portalın arkasında, diğeri önünde ise 
-      float rc[3];									//ve bu iki kordinatın ortası portalın üzerinde ise portalndan geçmişiz
+  for(i=0; i<2; i++){ // bu kisim portalin icinden geciyormuyuz diye kontrol ediyor
+    if(portals[i]->checkCollision(camOldN, camN)){ //eger bir onceki koordinatimiz portalin arkasinda, digeri onunde ise 
+      float rc[3];									//ve bu iki kordinatin ortasi portalin uzerinde ise portalndan gecmisiz
     
-      //bu kısım portaldan çıktığımızda hangi yönlere bakacagız, hangi koordinata gidecegiz onu ayarlıyor
-      //en çok kasan olaylardan birisi buydu =)
+      //bu kisim portaldan ciktigimizda hangi yonlere bakacagiz, hangi koordinata gidecegiz onu ayarliyor
+      //en cok kasan olaylardan birisi buydu =)
       
       rc[0] = -((camOldN[0]-portals[i]->coor[0])*portals[i]->lookX[0] + (camOldN[1]-portals[i]->coor[1])*portals[i]->lookX[1] + (camOldN[2]-portals[i]->coor[2])*portals[i]->lookX[2]);
       rc[1] = ((camOldN[0]-portals[i]->coor[0])*portals[i]->lookY[0] + (camOldN[1]-portals[i]->coor[1])*portals[i]->lookY[1] + (camOldN[2]-portals[i]->coor[2])*portals[i]->lookY[2]);
@@ -435,8 +435,8 @@ void timerf(){
   }
   
   if( i==2 ){ //eger portal icinden gecmediyse
-    for(i=0; i<6; i++){ //duvarlarla collision var mı kontrol ett
-      walls[i]->checkCamCollision(camOldN, camN); //varsa zaten o otomatik olarak kamerayı geri cekiyor
+    for(i=0; i<6; i++){ //duvarlarla collision var mi kontrol ett
+      walls[i]->checkCamCollision(camOldN, camN); //varsa zaten o otomatik olarak kamerayi geri cekiyor
     }
     for(i=0; i<3; i++){ //koselerden kacmamak icin
       if(camN[i] < -400) camN[i] = -400;
@@ -448,18 +448,18 @@ void timerf(){
 int oldState1 = GLFW_RELEASE;
 int oldState2 = GLFW_RELEASE;
 
-void click(){ //fare tıklamalarını kontrol eden fonksiyon
+void click(){ //fare tiklamalarini kontrol eden fonksiyon
   int n, m;
   int state = -1, button = -1;
   
-  //bu kısım programın glut sürümünden glfw ye geçerken bir parça karıştı
-  //normalde state ve button değerlerini glut ta direk alıyorum
-  //bu sefer  buttonun önce ki halini ve yeni halini kontrol etmek durumunda kalıyorum
+  //bu kisim programin glut surumunden glfw ye gecerken bir parca karisti
+  //normalde state ve button degerlerini glut ta direk aliyorum
+  //bu sefer  buttonun once ki halini ve yeni halini kontrol etmek durumunda kaliyorum
   
   if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) != oldState1){
-  	oldState1 = glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT); //eger sol fare tılandı veya bırakıldı ise
-  	if(oldState1 == GLFW_RELEASE) state = 1;  //bırakıldı ise state = 1
-  	else state = 0; //basıldı ise 0
+  	oldState1 = glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT); //eger sol fare tilandi veya birakildi ise
+  	if(oldState1 == GLFW_RELEASE) state = 1;  //birakildi ise state = 1
+  	else state = 0; //basildi ise 0
   	button = 0; //sol tus icin 0
   }
   
@@ -469,10 +469,10 @@ void click(){ //fare tıklamalarını kontrol eden fonksiyon
   	else state = 0;
   	button = 2;
   }
-  if(!ciz && button == -1)return; //eger farelerden biri tıklanmamıssa ve bir fare tusu basılı tutulmuyorsa çık
+  if(!ciz && button == -1)return; //eger farelerden biri tiklanmamissa ve bir fare tusu basili tutulmuyorsa cik
   
-  if(state == 0){ //fare tusu basıldı ise
-    ciz = 1; //portalları cizgi olarak ciz
+  if(state == 0){ //fare tusu basildi ise
+    ciz = 1; //portallari cizgi olarak ciz
     bt = button;
   }else if(state == 1){ 
     ciz = 0;
@@ -480,22 +480,22 @@ void click(){ //fare tıklamalarını kontrol eden fonksiyon
   }
  
   disabled = 0;
-  //baktıgımız yon bir duvar uzerinde mi ona bakıyoruz
+  //baktigimiz yon bir duvar uzerinde mi ona bakiyoruz
   for(int i=0; i<6; i++){
-  	//laser dedigimiz baktıgımız yonde 1000 koordinat lerdeki nokta
+  	//laser dedigimiz baktigimiz yonde 1000 koordinat lerdeki nokta
     float laser[3] = {camN[0] + camZ[0]*1000, camN[1] + camZ[1]*1000, camN[2] + camZ[2]*1000 };
-    if(walls[i]->checkCollision(camN, laser)){ //eger laser ile su anki koordinat arasındaki dogru duvar ile cakısıyors
+    if(walls[i]->checkCollision(camN, laser)){ //eger laser ile su anki koordinat arasindaki dogru duvar ile cakisiyors
 
 
       float lookN1[3]; 
-      lookN1[0] = walls[i]->intersection[0];  //portalın orta noktası bu ısının kesisim noktası
+      lookN1[0] = walls[i]->intersection[0];  //portalin orta noktasi bu isinin kesisim noktasi
       lookN1[1] = walls[i]->intersection[1];
       lookN1[2] = walls[i]->intersection[2];
 
 
-      //bu kısımda portalın y vektoru hesaplanacak
-      //aslında grafikle anlatmak daha iyi olacaktı ama o kadar uğraşasım yok
-      //temelde kameranın y vektörü ile aynı yönde olacak portalın y vektörü, ama tabi aynı zamanda duvarın normaline de dik olmalı
+      //bu kisimda portalin y vektoru hesaplanacak
+      //aslinda grafikle anlatmak daha iyi olacakti ama o kadar ugrasasim yok
+      //temelde kameranin y vektoru ile ayni yonde olacak portalin y vektoru, ama tabi ayni zamanda duvarin normaline de dik olmali
 	  float dx = walls[i]->normal[0];
 	  float dy = walls[i]->normal[1];
 	  float dz = walls[i]->normal[2];
@@ -525,7 +525,7 @@ void click(){ //fare tıklamalarını kontrol eden fonksiyon
 
       normalize(lookY1);
 
-      float lookX1[3]; //x vektörü de y vektörünün ve duvarın normalinin cross product ı
+      float lookX1[3]; //x vektoru de y vektorunun ve duvarin normalinin cross product i
       crossProduct(walls[i]->normal, lookY1, lookX1);
       
       points[0][0] = lookN1[0] + lookX1[0]*90 + lookY1[0]*150;
@@ -548,7 +548,7 @@ void click(){ //fare tıklamalarını kontrol eden fonksiyon
 
 
       for(n=0; n<4; n++){ //son bir test daha var
-        for(m=0; m<4; m++){ //eger portalın 4 koseside duvar üzeirnde mi diye kontrol ediyoruz
+        for(m=0; m<4; m++){ //eger portalin 4 koseside duvar uzeirnde mi diye kontrol ediyoruz
 		  v1[0] = walls[i]->points[(m+1)%4][0] - walls[i]->points[m][0];
 		  v1[1] = walls[i]->points[(m+1)%4][1] - walls[i]->points[m][1];
 		  v1[2] = walls[i]->points[(m+1)%4][2] - walls[i]->points[m][2];
@@ -574,8 +574,8 @@ void click(){ //fare tıklamalarını kontrol eden fonksiyon
         p = portals[1];
         p2 = portals[0];
       }
-      if(walls[i] == p2->onThis){ //bir baska testimizde iki portal da aynı duvarda ise
-        for(n=0; n<4; n++){ //iki portal üst üste biniyor mu diye bakıyoruz
+      if(walls[i] == p2->onThis){ //bir baska testimizde iki portal da ayni duvarda ise
+        for(n=0; n<4; n++){ //iki portal ust uste biniyor mu diye bakiyoruz
           int t = 0;
           for(int m=0; m<4; m++){
             v1[0] = p2->points[(m+1)%4][0] - p2->points[m][0];
@@ -617,7 +617,7 @@ void click(){ //fare tıklamalarını kontrol eden fonksiyon
 
       if(disabled == 1 || state != 1) return;
       
-      for(int j=0; j<3; j++){ //eger her sey duzgun ise portalın yerini degistir
+      for(int j=0; j<3; j++){ //eger her sey duzgun ise portalin yerini degistir
         p->lookX[j] = lookX1[j];
         p->lookY[j] = lookY1[j];
         p->lookZ[j] = walls[i]->normal[j];
